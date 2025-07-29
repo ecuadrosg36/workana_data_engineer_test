@@ -103,4 +103,3 @@ def _log_file_preview(path: Path, n_lines: int = 5) -> None:
         logger.warning("⚠️ Archivo muy corto, menos de %s líneas", n_lines)
     except Exception as exc:
         logger.warning("⚠️ No se pudo previsualizar el archivo: %s", exc)
-        
