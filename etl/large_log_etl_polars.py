@@ -93,4 +93,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     process_gz_to_polars(args.input, args.output, args.status_threshold)
-
