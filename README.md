@@ -710,7 +710,7 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
 ![1753797784709](image/README/1753797784709.png)
 
-### 🐳 4. Docker y ejecución reproducible 
+### 🐳 4. Docker y ejecución reproducible
 
 - [ ] Crear `Dockerfile` para ejecutar ETL o DAGs localmente
 
@@ -719,8 +719,81 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
   ![1753799516042](image/README/1753799516042.png)
 - [ ] Documentar cómo correr el entorno en README
+
+
+## Ejecución del Entorno con Docker y Airflow
+
+Este proyecto incluye un entorno reproducible utilizando **Docker Compose** que levanta los servicios necesarios para ejecutar tus DAGs y scripts ETL de forma local.
+
+### 📦 Servicios incluidos
+
+* **PostgreSQL** – Base de datos backend para Airflow
+* **Airflow Webserver** – Interfaz web para visualizar y ejecutar DAGs
+* **Airflow Scheduler** – Servicio que ejecuta los DAGs según su programación
+
+---
+
+### 🔧 Requisitos
+
+* Tener instalado:
+
+  * [Docker]()
+  * [Docker Compose]()
+* Puerto `8080` libre
+
+  ![1753800692024](image/README/1753800692024.png)
+
+---
+
+### ▶️ Cómo levantar el entorno
+
+1. Clona el repositorio:
+
+   ```
+   git clone https://github.com/tu_usuario/workana_data_engineer_test.git
+   cd workana_data_engineer_test
+
+   ```
+2. Ejecuta el entorno con Docker:
+
+   ```
+   docker-compose up --build
+
+   ```
+
+   Esto hará lo siguiente automáticamente:
+
+   * Inicializar la base de datos de Airflow
+   * Crear un usuario admin (`admin / admin`)
+   * Levantar la interfaz web de Airflow en [http://localhost:8080](http://localhost:8080)
+   * Iniciar el scheduler de DAGs
+
+---
+
+### 👤 Acceso al panel de Airflow
+
+* URL: [http://localhost:8080](http://localhost:8080)
+* Usuario: `admin`
+* Contraseña: `admin`
+
+Una vez dentro puedes activar y ejecutar el DAG `etl_transactions_dag` o cualquier otro DAG que hayas creado.
+
+---
+
+### 💾 Datos persistentes
+
+Los datos de PostgreSQL se almacenan en un volumen Docker llamado `postgres_db`.
+
 - [ ] Incluir rollback (ej: scripts para revertir carga) y reporting si es posible
 
+### 🛠️ Rollback y limpieza
+
+Si necesitas revertir la carga de datos (por ejemplo, del mes actual), ejecuta:
+
+```
+sqlite3 data/transactions.db < sql/rollback_last_month.sql
+
+```
 
 ## 📜 Entregables mínimos
 
