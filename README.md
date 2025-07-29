@@ -718,8 +718,7 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 - [ ] Crear `docker-compose.yaml` si hay múltiples servicios (Airflow + DB)
 
   ![1753799516042](image/README/1753799516042.png)
-- [ ] Documentar cómo correr el entorno en README
-
+- [X] Documentar cómo correr el entorno en README
 
 ## Ejecución del Entorno con Docker y Airflow
 
@@ -747,14 +746,14 @@ Este proyecto incluye un entorno reproducible utilizando **Docker Compose** que 
 
 ### ▶️ Cómo levantar el entorno
 
-1. Clona el repositorio:
+1. Clonar el repositorio:
 
    ```
    git clone https://github.com/tu_usuario/workana_data_engineer_test.git
    cd workana_data_engineer_test
 
    ```
-2. Ejecuta el entorno con Docker:
+2. Ejecutar el entorno con Docker:
 
    ```
    docker-compose up --build
@@ -768,6 +767,8 @@ Este proyecto incluye un entorno reproducible utilizando **Docker Compose** que 
    * Levantar la interfaz web de Airflow en [http://localhost:8080](http://localhost:8080)
    * Iniciar el scheduler de DAGs
 
+     ![1753800858691](image/README/1753800858691.png)
+
 ---
 
 ### 👤 Acceso al panel de Airflow
@@ -776,7 +777,9 @@ Este proyecto incluye un entorno reproducible utilizando **Docker Compose** que 
 * Usuario: `admin`
 * Contraseña: `admin`
 
-Una vez dentro puedes activar y ejecutar el DAG `etl_transactions_dag` o cualquier otro DAG que hayas creado.
+Una vez dentro puedes activar y ejecutar el DAG `etl_transactions_dag` o cualquier otro DAG creado.
+
+![1753800917738](image/README/1753800917738.png)
 
 ---
 
@@ -784,7 +787,7 @@ Una vez dentro puedes activar y ejecutar el DAG `etl_transactions_dag` o cualqui
 
 Los datos de PostgreSQL se almacenan en un volumen Docker llamado `postgres_db`.
 
-- [ ] Incluir rollback (ej: scripts para revertir carga) y reporting si es posible
+- [X] Incluir rollback (ej: scripts para revertir carga) y reporting si es posible
 
 ### 🛠️ Rollback y limpieza
 
@@ -794,6 +797,11 @@ Si necesitas revertir la carga de datos (por ejemplo, del mes actual), ejecuta:
 sqlite3 data/transactions.db < sql/rollback_last_month.sql
 
 ```
+
+![1753801151004](image/README/1753801151004.png)
+
+![1753801405853](image/README/1753801405853.png)
+
 
 ## 📜 Entregables mínimos
 
