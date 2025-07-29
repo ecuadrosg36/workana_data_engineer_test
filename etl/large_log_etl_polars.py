@@ -60,20 +60,24 @@ def process_gz_to_polars(
 
     grouped = (
         df.group_by(["hour", "endpoint"])
-        .agg([
-            pl.len().alias("total_requests"),
-            (pl.col("status_code") >= status_threshold)
-            .cast(pl.Int64)
-            .sum()
-            .alias("error_requests"),
-        ])
-        .with_columns([
-            (
-                (pl.col("error_requests") / pl.col("total_requests") * 100)
-                .round(2)
-                .alias("error_pct")
-            ),
-        ])
+        .agg(
+            [
+                pl.len().alias("total_requests"),
+                (pl.col("status_code") >= status_threshold)
+                .cast(pl.Int64)
+                .sum()
+                .alias("error_requests"),
+            ]
+        )
+        .with_columns(
+            [
+                (
+                    (pl.col("error_requests") / pl.col("total_requests") * 100)
+                    .round(2)
+                    .alias("error_pct")
+                ),
+            ]
+        )
     )
 
     Path(output_parquet_path).parent.mkdir(parents=True, exist_ok=True)
