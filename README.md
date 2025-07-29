@@ -163,7 +163,7 @@ docker-compose up
 ![1753663219056](image/README/1753663219056.png)
 
 - [X] Agregar sensores y reintentos a las tareas
-  ➜ `airflow_dags/etl_transactions_dag.py`
+  ➜ `dags/etl_transactions_dag.py`
 
   ![1753666490954](image/README/1753666490954.png)
 
@@ -801,6 +801,9 @@ sqlite3 data/transactions.db < sql/rollback_last_month.sql
 ![1753801151004](image/README/1753801151004.png)
 
 ![1753801405853](image/README/1753801405853.png)
+
+![1753802619702](image/README/1753802619702.png)
+
 
 
 ## 📜 Entregables mínimos
