@@ -40,7 +40,7 @@ def transform_transactions(
             raw_df = pd.read_csv(input_path, sep=",", engine="c")
             df = _validate_and_clean(raw_df)
 
-    except pd.errors.ParserError as e:
+    except pd.errors.ParserError:
         logger.error(
             "❌ Error de parsing con engine='c'. Reintentando con engine='python'..."
         )
@@ -50,8 +50,8 @@ def transform_transactions(
         except Exception as inner:
             logger.exception("❌ Falla al reintentar con engine='python': %s", inner)
             raise
-    except Exception as e:
-        logger.exception("❌ Error inesperado leyendo el CSV: %s", e)
+    except Exception as exc:
+        logger.exception("❌ Error inesperado leyendo el CSV: %s", exc)
         raise
 
     if output_parquet:
@@ -101,5 +101,6 @@ def _log_file_preview(path: Path, n_lines: int = 5) -> None:
 
     except StopIteration:
         logger.warning("⚠️ Archivo muy corto, menos de %s líneas", n_lines)
-    except Exception as e:
-        logger.warning("⚠️ No se pudo previsualizar el archivo: %s", e)
+    except Exception as exc:
+        logger.warning("⚠️ No se pudo previsualizar el archivo: %s", exc)
+

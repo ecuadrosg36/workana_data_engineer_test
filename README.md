@@ -710,10 +710,14 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
 ![1753797784709](image/README/1753797784709.png)
 
-### 🐳 4. Docker y ejecución reproducible (opcional)
+### 🐳 4. Docker y ejecución reproducible 
 
 - [ ] Crear `Dockerfile` para ejecutar ETL o DAGs localmente
-- [ ] Crear `docker-compose.yml` si hay múltiples servicios (Airflow + DB)
+
+  ![1753799722130](image/README/1753799722130.png)
+- [ ] Crear `docker-compose.yaml` si hay múltiples servicios (Airflow + DB)
+
+  ![1753799516042](image/README/1753799516042.png)
 - [ ] Documentar cómo correr el entorno en README
 - [ ] Incluir rollback (ej: scripts para revertir carga) y reporting si es posible
 
