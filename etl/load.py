@@ -1,6 +1,6 @@
 import logging
 import sqlite3
-from typing import Optional
+from typing import Optional, Literal
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ def load_dataframe_to_sqlite(
     df: pd.DataFrame,
     sqlite_path: str,
     table_name: str,
-    if_exists: str = "append",
+    if_exists: Literal['fail', 'replace', 'append'] = "append",
     chunksize: int = 50000,
 ) -> None:
     logger.info("Conectando a SQLite: %s", sqlite_path)
@@ -59,9 +59,9 @@ def main(
     if df.empty:
         raise ValueError("El DataFrame está vacío. Abortando carga.")
 
-    load_dataframe_to_sqlite(df=df, sqlite_path=SQLITE_DB_PATH, table_name=table_name)
+    load_dataframe_to_sqlite(df=df, sqlite_path=str(SQLITE_DB_PATH), table_name=table_name)
 
-    validate_table_not_empty(SQLITE_DB_PATH, table_name)
+    validate_table_not_empty(sqlite_path=str(SQLITE_DB_PATH), table_name=table_name)
 
 
 if __name__ == "__main__":
