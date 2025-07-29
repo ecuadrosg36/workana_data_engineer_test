@@ -11,9 +11,7 @@ from typing import Optional
 import pandas as pd
 
 # --- Logging setup ---
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("etl.large_log_etl_multiproc")
 
 

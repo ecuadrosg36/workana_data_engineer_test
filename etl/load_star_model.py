@@ -14,9 +14,7 @@ dim_user["scd_version"] = 1
 dim_user["scd_start_ts"] = datetime.now().isoformat()
 dim_user["scd_end_ts"] = None
 
-dim_status = pd.DataFrame(
-    {"status": df["status"].unique(), "description": df["status"].unique()}
-)
+dim_status = pd.DataFrame({"status": df["status"].unique(), "description": df["status"].unique()})
 
 dim_date = df[["date_id"]].drop_duplicates().copy()
 dim_date["year"] = dim_date["date_id"].apply(lambda x: int(x[:4]))

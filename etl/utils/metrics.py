@@ -5,9 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-DEFAULT_METRICS_CSV = os.environ.get(
-    "METRICS_CSV", "/opt/airflow/project/logs/etl_metrics.csv"
-)
+DEFAULT_METRICS_CSV = os.environ.get("METRICS_CSV", "/opt/airflow/project/logs/etl_metrics.csv")
 
 
 def _ensure_parent(path: Path) -> None:

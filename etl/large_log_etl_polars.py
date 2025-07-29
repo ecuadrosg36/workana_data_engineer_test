@@ -9,9 +9,7 @@ from typing import Optional
 import polars as pl
 
 # Setup logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("etl.large_log_etl_polars")
 
 
@@ -25,9 +23,7 @@ def parse_timestamp(ts: str) -> Optional[str]:
         return None
 
 
-def process_gz_to_polars(
-    input_gz_path: str, output_parquet_path: str, status_threshold: int = 500
-):
+def process_gz_to_polars(input_gz_path: str, output_parquet_path: str, status_threshold: int = 500):
     logger.info("🚀 Iniciando procesamiento con polars: %s", input_gz_path)
     start = time.time()
 
@@ -48,9 +44,7 @@ def process_gz_to_polars(
                 if not rounded_ts:
                     continue
 
-                records.append(
-                    {"hour": rounded_ts, "endpoint": endpoint, "status_code": status}
-                )
+                records.append({"hour": rounded_ts, "endpoint": endpoint, "status_code": status})
             except json.JSONDecodeError:
                 continue
 

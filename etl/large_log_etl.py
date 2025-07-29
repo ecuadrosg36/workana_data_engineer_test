@@ -62,9 +62,7 @@ def process_log_streaming(
     logger.info("Iniciando procesamiento streaming: %s", input_gz)
     start = time.time()
 
-    agg: Dict[Tuple[str, str], Dict[str, int]] = defaultdict(
-        lambda: {"total": 0, "errors": 0}
-    )
+    agg: Dict[Tuple[str, str], Dict[str, int]] = defaultdict(lambda: {"total": 0, "errors": 0})
 
     total_lines = parsed_lines = error_lines = kept_lines = 0
 
@@ -130,9 +128,7 @@ def process_log_streaming(
     return df
 
 
-def write_parquet(
-    df: pd.DataFrame, output_parquet: Path, compression: str = "snappy"
-) -> None:
+def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "snappy") -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(output_parquet, compression=compression, index=False)
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
@@ -142,9 +138,7 @@ def write_parquet(
 # CLI
 # ------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(
-        description="ETL streaming para sample.log.gz (JSONL)."
-    )
+    parser = argparse.ArgumentParser(description="ETL streaming para sample.log.gz (JSONL).")
     parser.add_argument("--input", required=True, help="Ruta al archivo .log.gz")
     parser.add_argument("--output", required=True, help="Ruta al parquet de salida")
     parser.add_argument(

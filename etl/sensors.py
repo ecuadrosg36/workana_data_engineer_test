@@ -25,9 +25,7 @@ def wait_for_file(path: str, min_size_bytes: int = 1_000, timeout: int = 60) -> 
     waited = 0
     while waited < timeout:
         if file_ready(path, min_size_bytes=min_size_bytes):
-            logger.info(
-                "✅ Archivo disponible: %s (%s bytes)", path, os.path.getsize(path)
-            )
+            logger.info("✅ Archivo disponible: %s (%s bytes)", path, os.path.getsize(path))
             return True
         logger.info("⏳ Esperando archivo... (%ss)", waited)
         time.sleep(5)
