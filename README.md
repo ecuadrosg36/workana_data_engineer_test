@@ -361,6 +361,12 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 
   ![1753796582364](image/README/1753796582364.png)
 
+  ![1753797404018](image/README/1753797404018.png)
+
+  ![1753798442652](image/README/1753798442652.png)
+
+  ![1753798462361](image/README/1753798462361.png)
+
 ### 🐛 7. Logging y manejo de errores
 
 - [X] Configurar `logging` para registrar:
@@ -370,6 +376,8 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 - [X] Guardar logs en archivo (`logs/etl_run.log`)
 
 ![1753760384920](image/README/1753760384920.png)
+
+![1753797518494](image/README/1753797518494.png)
 
 ---
 
@@ -606,13 +614,49 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
 ### 🔄 3. Automatización con CI (GitHub Actions o GitLab CI)
 
-- [ ] Crear workflow de CI/CD en `.github/workflows/ci.yml` o `.gitlab-ci.yml`
-- [ ] Incluir en el pipeline:
-  - [ ] Linter (`flake8`, `black`, `isort`)
-  - [ ] Tests (`pytest`)
-  - [ ] Chequeos estáticos (`mypy`, `bandit`)
-  - [ ] Validación de DAGs (si se usa Airflow)
-  - [ ] Reporte de cobertura (opcional con `coverage`)
+- [X] Crear workflow de CI/CD en `.github/workflows/ci.yml` o `.gitlab-ci.yml`
+- [X] Incluir en el pipeline:
+
+  - [X] Linter (`flake8`, `black`, `isort`)
+  - [X] Tests (`pytest`)
+  - [X] Chequeos estáticos (`mypy`, `bandit`)
+  - [X] Validación de DAGs (si se usa Airflow)
+  - [X] Reporte de cobertura (opcional con `coverage`)
+
+    ![1753796961587](image/README/1753796961587.png)
+
+    ![1753796985636](image/README/1753796985636.png)
+
+  El proyecto cuenta con pipeline CI/CD en GitHub Actions, que verifica automáticamente:
+
+  - Linter de código (flake8, black, isort)
+  - Tests automáticos (pytest)
+  - Chequeos estáticos (mypy, bandit)
+  - Reporte de cobertura
+  - Validación de sintaxis de DAGs Airflow
+
+  Ver el archivo `.github/workflows/ci.yml` para detalles.
+
+  ![1753797208573](image/README/1753797208573.png)
+
+  ```
+  # Ordena imports automáticamente y remueve los no usados
+  autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r etl/
+  autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r etl/utils/
+
+  # Ordena y agrupa imports
+  isort etl/
+  isort etl/utils/
+
+  # Formatea el código 
+  black etl/
+  black etl/utils/
+  ```
+
+![1753797738825](image/README/1753797738825.png)
+
+![1753797784709](image/README/1753797784709.png)
+
 
 ### 🐳 4. Docker y ejecución reproducible (opcional)
 

@@ -101,8 +101,10 @@ def process_log_streaming(
 
             if total_lines % log_every == 0:
                 logger.info(
-                    f"Progreso: {total_lines:,} líneas | parseadas: {parsed_lines:,} | inválidas: {error_lines:,} | errores >= {status_threshold}: {kept_lines:,}"
+                    f"Progreso: {total_lines:,} líneas | parseadas: {parsed_lines:,} | "
+                    f"inválidas: {error_lines:,} | errores >= {status_threshold}: {kept_lines:,}"
                 )
+
 
     rows = []
     for (hour_dt, endpoint), counts in agg.items():
@@ -121,8 +123,10 @@ def process_log_streaming(
 
     df = pd.DataFrame(rows)
     logger.info(
-        f"Progreso: {total_lines:,} líneas | parseadas: {parsed_lines:,} | inválidas: {error_lines:,} | errores >= {status_threshold}: {kept_lines:,}"
+        f"Progreso: {total_lines:,} líneas | parseadas: {parsed_lines:,} | "
+        f"inválidas: {error_lines:,} | errores >= {status_threshold}: {kept_lines:,}"
     )
+
 
     logger.info("Tiempo total: %.2f s", time.time() - start)
     return df

@@ -6,3 +6,11 @@ apache-airflow
 psycopg2
 requests
 pyarrow
+flake8
+autoflake
+black
+isort
+mypy
+bandit
+coverage
+polars

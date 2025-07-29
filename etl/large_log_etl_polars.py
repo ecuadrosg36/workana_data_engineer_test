@@ -58,23 +58,19 @@ def process_gz_to_polars(
     logger.info("🔍 Registros procesados: %d", df.shape[0])
 
     grouped = (
-        df.groupby(["hour", "endpoint"])
-        .agg(
-            [
-                pl.count().alias("total_requests"),
-                pl.sum(
-                    (pl.col("status_code") >= status_threshold).cast(pl.Int64)
-                ).alias("error_requests"),
-            ]
-        )
-        .with_columns(
-            [
-                (pl.col("error_requests") / pl.col("total_requests") * 100)
-                .round(2)
-                .alias("error_pct")
-            ]
-        )
+        df.group_by(["hour", "endpoint"])
+        .agg([
+            pl.len().alias("total_requests"),
+            (pl.col("status_code") >= status_threshold)
+                .cast(pl.Int64)
+                .sum()
+                .alias("error_requests")
+        ])
+        .with_columns([
+            (pl.col("error_requests") / pl.col("total_requests") * 100).round(2).alias("error_pct")
+        ])
     )
+
 
     Path(output_parquet_path).parent.mkdir(parents=True, exist_ok=True)
     grouped.write_parquet(output_parquet_path, compression="snappy")

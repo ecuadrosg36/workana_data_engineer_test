@@ -42,7 +42,7 @@ def transform_transactions(
 
     except pd.errors.ParserError as e:
         logger.error(
-            f"❌ Error de parsing con engine='c'. Reintentando con engine='python'..."
+            "❌ Error de parsing con engine='c'. Reintentando con engine='python'..."
         )
         try:
             raw_df = pd.read_csv(input_path, sep=",", engine="python")

@@ -10,7 +10,11 @@ MIN_SIZE_BYTES = 1_000
 TIMEOUT_SECONDS = 120
 
 # --- URL de Dropbox ---
-CSV_URL = "https://www.dropbox.com/scl/fi/9s8zptquw3urvhsctmgya/sample_transactions.csv?rlkey=8s2wyvvjcm96c6ctopvwnskwj&dl=1"
+CSV_URL = (
+    "https://www.dropbox.com/scl/fi/9s8zptquw3urvhsctmgya/sample_transactions.csv"
+    "?rlkey=8s2wyvvjcm96c6ctopvwnskwj&dl=1"
+)
+
 
 # --- Configuración de SQLite ---
 SQLITE_DB_PATH = DATA_DIR / "etl_output.db"
