@@ -365,7 +365,6 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 
 ---
 
-
 ## 🧪 Extras (si hay tiempo)
 
 - [ ] Escribir pruebas unitarias para funciones clave (parsing, filtrado, agregación)
@@ -573,6 +572,8 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
   ![1753755107331](image/README/1753755107331.png)
 
+  ![1753795972970](image/README/1753795972970.png)
+
 ### 🌿 2. Estrategia de branches
 
 - [X] Definir ramas principales:
@@ -589,7 +590,11 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
   |------ feature/test-coverage
   |------ feature/update-docs
 
-  ![1753758025066](image/README/1753758025066.png)
+  ![1753796056460](image/README/1753796056460.png)
+
+  ![1753796213700](image/README/1753796213700.png)
+
+  ![1753796276407](image/README/1753796276407.png)
 
 ### 🔄 3. Automatización con CI (GitHub Actions o GitLab CI)
 

@@ -4,7 +4,7 @@ import time
 import logging
 from collections import defaultdict
 from datetime import datetime
-from multiprocessing import Pool, cpu_count
+from multiprocessing import get_context
 from pathlib import Path
 from typing import Dict, Tuple, Optional
 import pandas as pd
@@ -51,9 +51,9 @@ def process_lines(lines, status_threshold=500):
     return dict(agg)
 
 # --- Main function ---
-def process_file_parallel(input_path: str, output_path: str, chunk_size=100_000):
+def process_file_parallel(input_path: str, output_path: str, chunk_size=20000):
     start = time.time()
-    logger.info("Starting multiprocessing ETL on: %s", input_path)
+    logger.info("🚀 Starting multiprocessing ETL on: %s", input_path)
 
     chunks = []
     with gzip.open(input_path, mode="rt", encoding="utf-8", errors="ignore") as f:
@@ -66,9 +66,10 @@ def process_file_parallel(input_path: str, output_path: str, chunk_size=100_000)
         if chunk:
             chunks.append(chunk)
 
-    logger.info("Total chunks to process: %d", len(chunks))
+    logger.info("🔢 Total chunks to process: %d", len(chunks))
 
-    with Pool(cpu_count()) as pool:
+    # Use spawn context to avoid Windows forking issues
+    with get_context("spawn").Pool(processes=4) as pool:
         results = pool.map(process_lines, chunks)
 
     agg = defaultdict(lambda: {"total": 0, "errors": 0})
@@ -95,7 +96,7 @@ def process_file_parallel(input_path: str, output_path: str, chunk_size=100_000)
     df.to_parquet(output_path, compression="snappy", index=False)
 
     logger.info("✅ Parquet written: %s | Rows: %d", output_path, len(df))
-    logger.info("⌛ Total Time: %.2f seconds", time.time() - start)
+    logger.info("⏱️ Total Time: %.2f seconds", time.time() - start)
 
 # --- Entry point ---
 if __name__ == "__main__":
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Input .gz file")
     parser.add_argument("--output", required=True, help="Output .parquet file")
-    parser.add_argument("--chunk-size", type=int, default=100_000)
+    parser.add_argument("--chunk-size", type=int, default=20000)
     args = parser.parse_args()
 
     process_file_parallel(args.input, args.output, args.chunk_size)
