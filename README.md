@@ -295,7 +295,7 @@ Ejecutar consultas SQL sobre los datos ya cargados en la base de datos (desde el
 
 ---
 
-## 📝 Extras (si hay tiempo)
+## 📝 Extras
 
 - [ ] Automatizar queries en script Python con SQLAlchemy o `psycopg2`
 - [ ] Graficar resultados con `matplotlib` o `plotly` (opcional)
@@ -367,6 +367,59 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 
   ![1753798462361](image/README/1753798462361.png)
 
+#### Lectura en streaming (Python)
+
+* Se implementó lectura línea a línea usando `gzip.open()` y `json.loads()`.
+* Se filtraron solo registros con `status_code ≥ 500`.
+* Se convirtieron los `timestamp` a `datetime` redondeado por hora (`floor_hour`).
+* Se agrupó por `(hora, endpoint)` para obtener:
+  * Total de requests
+  * Total de errores
+  * Porcentaje de error
+
+#### Exportación del resumen
+
+* Se generó un archivo `Parquet` comprimido con Snappy:
+
+  📄 `output/errors_summary_polars.parquet`
+
+#### Optimización de rendimiento
+
+Se compararon distintas estrategias para escalar el ETL:
+
+| Estrategia                  | Descripción                                              | Resultado                                                             |
+| --------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Baseline (pandas)           | Lectura secuencial con pandas                             | ✅ Funciona, pero no escalable                                        |
+| `multiprocessing`         | División por chunks y uso de múltiples núcleos         | ⚠️ Falló por recursos insuficientes (`WinError 1450`)            |
+| **`polars`(final)** | Lectura eficiente y procesamiento columnar con `polars` | ✅ Rápido, menor consumo de memoria, fue la versión final utilizada |
+
+#### Logs y monitoreo
+
+* Se configuró `logging` para registrar:
+  * Progreso (cada 100k líneas)
+  * Total de líneas parseadas, errores y descartadas
+  * Tiempo total de ejecución
+* Log guardado en: `logs/etl_run.log`
+
+---
+
+### 💡 Resultado
+
+El uso de `polars` permitió procesar eficientemente el archivo gigante en menos de 1 minuto, con una sintaxis declarativa y menor uso de memoria que pandas.
+
+Además, se evitó el uso de Airflow ya que el volumen y frecuencia no requerían un orquestador.
+
+---
+
+### 📁 Archivos relevantes
+
+| Archivo                                  | Descripción                                                 |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| `etl/large_log_etl.py`                 | Versión base con pandas                                     |
+| `etl/large_log_etl_multiproc.py`       | Versión paralela con `multiprocessing`(falló en Windows) |
+| `etl/large_log_etl_polars.py`          | ✅ Versión final usando `polars`                          |
+| `output/errors_summary_polars.parquet` | Resultado final                                              |
+
 ### 🐛 7. Logging y manejo de errores
 
 - [X] Configurar `logging` para registrar:
@@ -377,11 +430,9 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 
 ![1753760384920](image/README/1753760384920.png)
 
-![1753797518494](image/README/1753797518494.png)
-
 ---
 
-## 🧪 Extras (si hay tiempo)
+## 🧪 Extras
 
 - [ ] Escribir pruebas unitarias para funciones clave (parsing, filtrado, agregación)
 - [ ] Graficar las métricas por hora con `matplotlib` o `seaborn`
@@ -556,7 +607,7 @@ Se optó por SCD Tipo 2 porque permite mantener un registro histórico completo 
 
 ---
 
-## 🧪 Extras (si hay tiempo)
+## 🧪 Extras
 
 - [ ] Probar queries analíticas sobre la tabla de hechos (ej: KPIs por usuario/mes)
 - [ ] Automatizar carga con Airflow
@@ -639,6 +690,8 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
   ![1753797208573](image/README/1753797208573.png)
 
+  ![1753797518494](https://file+.vscode-resource.vscode-cdn.net/c%3A/Users/enman/Downloads/COLFONDOS/workana_data_engineer_test/image/README/1753797518494.png)
+
   ```
   # Ordena imports automáticamente y remueve los no usados
   autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r etl/
@@ -657,7 +710,6 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
 ![1753797784709](image/README/1753797784709.png)
 
-
 ### 🐳 4. Docker y ejecución reproducible (opcional)
 
 - [ ] Crear `Dockerfile` para ejecutar ETL o DAGs localmente
@@ -665,15 +717,6 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 - [ ] Documentar cómo correr el entorno en README
 - [ ] Incluir rollback (ej: scripts para revertir carga) y reporting si es posible
 
----
-
-## 🗂️ Enlaces por hacer / dependencias
-
-- [ ] [ ] Conectar CI al repositorio en GitHub/GitLab
-- [ ] [ ] Crear archivos de configuración: `.pre-commit-config.yaml`, `pyproject.toml`
-- [ ] [ ] Agregar al README: instrucciones para contribuir, correr tests, y ejecutar CI
-
----
 
 ## 📜 Entregables mínimos
 
@@ -684,7 +727,7 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 
 ---
 
-## 🧪 Extras (si hay tiempo)
+## 🧪 Extras
 
 - [ ] Integración con Notebooks o documentación automatizada (ej: MkDocs)
 - [ ] Reportes visuales o dashboards con métricas

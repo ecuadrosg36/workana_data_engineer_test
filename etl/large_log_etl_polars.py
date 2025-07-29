@@ -5,13 +5,16 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+
 import polars as pl
+
 
 # Setup logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger("etl.large_log_etl_polars")
+
 
 def parse_timestamp(ts: str) -> Optional[str]:
     try:
@@ -21,6 +24,7 @@ def parse_timestamp(ts: str) -> Optional[str]:
         return dt.replace(minute=0, second=0, microsecond=0).isoformat()
     except Exception:
         return None
+
 
 def process_gz_to_polars(
     input_gz_path: str, output_parquet_path: str, status_threshold: int = 500
@@ -59,12 +63,16 @@ def process_gz_to_polars(
         .agg([
             pl.len().alias("total_requests"),
             (pl.col("status_code") >= status_threshold)
-                .cast(pl.Int64)
-                .sum()
-                .alias("error_requests")
+            .cast(pl.Int64)
+            .sum()
+            .alias("error_requests"),
         ])
         .with_columns([
-            (pl.col("error_requests") / pl.col("total_requests") * 100).round(2).alias("error_pct")
+            (
+                (pl.col("error_requests") / pl.col("total_requests") * 100)
+                .round(2)
+                .alias("error_pct")
+            ),
         ])
     )
 
@@ -73,6 +81,7 @@ def process_gz_to_polars(
 
     logger.info("✅ Parquet exportado: %s", output_parquet_path)
     logger.info("⏱️ Tiempo total: %.2f s", time.time() - start)
+
 
 if __name__ == "__main__":
     import argparse
@@ -84,3 +93,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     process_gz_to_polars(args.input, args.output, args.status_threshold)
+

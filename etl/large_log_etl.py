@@ -8,7 +8,9 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
+
 import pandas as pd
+
 
 # ------------------------------------------------------
 # Logging
@@ -24,7 +26,9 @@ def setup_logging(log_path: Optional[str] = None, level: int = logging.INFO) -> 
         handlers=handlers,
     )
 
+
 logger = logging.getLogger("etl.large_log_etl")
+
 
 # ------------------------------------------------------
 # Utils
@@ -34,8 +38,10 @@ def parse_timestamp(ts: str) -> datetime:
         ts = ts.replace("Z", "+00:00")
     return datetime.fromisoformat(ts)
 
+
 def floor_hour(dt: datetime) -> datetime:
     return dt.replace(minute=0, second=0, microsecond=0)
+
 
 def safe_json_loads(line: str) -> Optional[dict]:
     try:
@@ -43,6 +49,7 @@ def safe_json_loads(line: str) -> Optional[dict]:
     except Exception as e:
         logger.debug("Línea inválida, no es JSON válido: %s", e)
         return None
+
 
 # ------------------------------------------------------
 # Core
@@ -122,12 +129,14 @@ def process_log_streaming(
     logger.info("Tiempo total: %.2f s", time.time() - start)
     return df
 
+
 def write_parquet(
     df: pd.DataFrame, output_parquet: Path, compression: str = "snappy"
 ) -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(output_parquet, compression=compression, index=False)
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
+
 
 # ------------------------------------------------------
 # CLI
@@ -166,6 +175,7 @@ def main():
         status_threshold=args.status_threshold,
     )
     write_parquet(df, output_parquet)
+
 
 if __name__ == "__main__":
     main()

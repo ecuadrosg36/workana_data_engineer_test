@@ -15,7 +15,6 @@ CSV_URL = (
     "?rlkey=8s2wyvvjcm96c6ctopvwnskwj&dl=1"
 )
 
-
 # --- Configuración de SQLite ---
 SQLITE_DB_PATH = DATA_DIR / "etl_output.db"
 SQLITE_URL = f"sqlite:///{SQLITE_DB_PATH}"
