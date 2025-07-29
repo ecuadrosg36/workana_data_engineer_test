@@ -349,9 +349,17 @@ Procesar un archivo `sample.log.gz` (~5 millones de líneas en formato JSONL) en
 
 ### ⚙️ 6. Performance y escalabilidad
 
-- [ ] Implementar versión alternativa con `multiprocessing`
-- [ ] Probar versiones con `polars` y/o `dask`
-- [ ] Medir tiempos de ejecución y uso de memoria (profiling)
+- [X] Implementar versión alternativa con `multiprocessing`
+- [X] Probar versiones con `polars` y/o `dask`
+- [X] Medir tiempos de ejecución y uso de memoria (profiling)
+
+  ![1753796367296](image/README/1753796367296.png)
+
+  ![1753796441384](image/README/1753796441384.png)
+
+  ![1753796522486](image/README/1753796522486.png)
+
+  ![1753796582364](image/README/1753796582364.png)
 
 ### 🐛 7. Logging y manejo de errores
 
