@@ -1,13 +1,8 @@
 import logging
 from pathlib import Path
 
-from etl.config import (
-    CLEAN_OUTPUT_PATH,
-    CSV_URL,
-    MIN_SIZE_BYTES,
-    RAW_CSV_PATH,
-    TIMEOUT_SECONDS,
-)
+from etl.config import (CLEAN_OUTPUT_PATH, CSV_URL, MIN_SIZE_BYTES,
+                        RAW_CSV_PATH, TIMEOUT_SECONDS)
 from etl.sensors import wait_for_file
 from etl.transform import transform_transactions
 from scripts.download_csv import download_csv
