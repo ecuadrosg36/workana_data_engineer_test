@@ -2,15 +2,15 @@ import logging
 from pathlib import Path
 
 from etl.config import (
-    CSV_URL,
-    RAW_CSV_PATH,
     CLEAN_OUTPUT_PATH,
+    CSV_URL,
     MIN_SIZE_BYTES,
+    RAW_CSV_PATH,
     TIMEOUT_SECONDS,
 )
-from scripts.download_csv import download_csv
 from etl.sensors import wait_for_file
 from etl.transform import transform_transactions
+from scripts.download_csv import download_csv
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,14 +29,16 @@ def main():
 
     # 2) Sensor de archivo
     logger.info("Esperando archivo...")
-    wait_for_file(str(RAW_CSV_PATH), min_size_bytes=MIN_SIZE_BYTES, timeout=TIMEOUT_SECONDS)
+    wait_for_file(
+        str(RAW_CSV_PATH), min_size_bytes=MIN_SIZE_BYTES, timeout=TIMEOUT_SECONDS
+    )
 
     # 3) Transformación
     logger.info("Transformando datos...")
     df = transform_transactions(
         input_path=RAW_CSV_PATH,
         output_parquet=CLEAN_OUTPUT_PATH,  # puedes poner None si no quieres guardar parquet
-        chunksize=None  # o por ej. 100_000 si el CSV es muy grande
+        chunksize=None,  # o por ej. 100_000 si el CSV es muy grande
     )
 
     logger.info("ETL finalizado correctamente ✅")

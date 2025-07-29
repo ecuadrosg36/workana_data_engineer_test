@@ -2,13 +2,12 @@ import argparse
 import gzip
 import json
 import logging
-import os
 import sys
 import time
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional, Tuple
 
 import pandas as pd
 
@@ -63,7 +62,9 @@ def process_log_streaming(
     logger.info("Iniciando procesamiento streaming: %s", input_gz)
     start = time.time()
 
-    agg: Dict[Tuple[str, str], Dict[str, int]] = defaultdict(lambda: {"total": 0, "errors": 0})
+    agg: Dict[Tuple[str, str], Dict[str, int]] = defaultdict(
+        lambda: {"total": 0, "errors": 0}
+    )
 
     total_lines = parsed_lines = error_lines = kept_lines = 0
 
@@ -103,7 +104,6 @@ def process_log_streaming(
                     f"Progreso: {total_lines:,} líneas | parseadas: {parsed_lines:,} | inválidas: {error_lines:,} | errores >= {status_threshold}: {kept_lines:,}"
                 )
 
-
     rows = []
     for (hour_dt, endpoint), counts in agg.items():
         total = counts["total"]
@@ -128,7 +128,9 @@ def process_log_streaming(
     return df
 
 
-def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "snappy") -> None:
+def write_parquet(
+    df: pd.DataFrame, output_parquet: Path, compression: str = "snappy"
+) -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(output_parquet, compression=compression, index=False)
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
@@ -138,12 +140,23 @@ def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "sn
 # CLI
 # ------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(description="ETL streaming para sample.log.gz (JSONL).")
+    parser = argparse.ArgumentParser(
+        description="ETL streaming para sample.log.gz (JSONL)."
+    )
     parser.add_argument("--input", required=True, help="Ruta al archivo .log.gz")
     parser.add_argument("--output", required=True, help="Ruta al parquet de salida")
-    parser.add_argument("--status-threshold", type=int, default=500, help="Status mínimo como error (default: 500)")
+    parser.add_argument(
+        "--status-threshold",
+        type=int,
+        default=500,
+        help="Status mínimo como error (default: 500)",
+    )
     parser.add_argument("--log-file", default="logs/etl_run.log", help="Ruta del log")
-    parser.add_argument("--log-level", default="INFO", help="Nivel de logging: DEBUG, INFO, WARNING, ERROR")
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        help="Nivel de logging: DEBUG, INFO, WARNING, ERROR",
+    )
     args = parser.parse_args()
 
     setup_logging(args.log_file, getattr(logging, args.log_level.upper(), logging.INFO))

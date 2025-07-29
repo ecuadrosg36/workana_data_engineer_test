@@ -1,15 +1,18 @@
 import logging
 import sqlite3
 from typing import Optional
+
 import pandas as pd
+
+from etl.config import RAW_CSV_PATH, SQLITE_DB_PATH
 from etl.transform import transform_transactions
-from etl.config import RAW_CSV_PATH, CLEAN_OUTPUT_PATH, SQLITE_DB_PATH
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
 )
 logger = logging.getLogger("etl.load")
+
 
 def load_dataframe_to_sqlite(
     df: pd.DataFrame,
@@ -29,6 +32,7 @@ def load_dataframe_to_sqlite(
         )
         logger.info("✅ Carga completada en la tabla '%s'.", table_name)
 
+
 def validate_table_not_empty(sqlite_path: str, table_name: str) -> int:
     with sqlite3.connect(sqlite_path) as conn:
         cursor = conn.cursor()
@@ -38,6 +42,7 @@ def validate_table_not_empty(sqlite_path: str, table_name: str) -> int:
         raise ValueError(f"La tabla '{table_name}' quedó vacía.")
     logger.info("✅ Validación OK. Filas en tabla: %s", count)
     return count
+
 
 def main(
     table_name: str = "transactions",
@@ -54,13 +59,10 @@ def main(
     if df.empty:
         raise ValueError("El DataFrame está vacío. Abortando carga.")
 
-    load_dataframe_to_sqlite(
-        df=df,
-        sqlite_path=SQLITE_DB_PATH,
-        table_name=table_name
-    )
+    load_dataframe_to_sqlite(df=df, sqlite_path=SQLITE_DB_PATH, table_name=table_name)
 
     validate_table_not_empty(SQLITE_DB_PATH, table_name)
+
 
 if __name__ == "__main__":
     import argparse

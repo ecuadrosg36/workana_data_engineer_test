@@ -1,8 +1,9 @@
-import time
 import logging
+import time
 from functools import wraps
 
 logger = logging.getLogger(__name__)
+
 
 def log_execution_time(task_name: str):
     def decorator(func):
@@ -14,5 +15,7 @@ def log_execution_time(task_name: str):
             duration = time.time() - start
             logger.info(f"✅ {task_name} finalizada en {duration:.2f} segundos")
             return result
+
         return wrapper
+
     return decorator

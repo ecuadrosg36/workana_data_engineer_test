@@ -1,17 +1,21 @@
 import gzip
 import json
-import time
 import logging
+import time
 from collections import defaultdict
 from datetime import datetime
 from multiprocessing import get_context
 from pathlib import Path
-from typing import Dict, Tuple, Optional
+from typing import Optional
+
 import pandas as pd
 
 # --- Logging setup ---
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger("etl.large_log_etl_multiproc")
+
 
 # --- Helpers ---
 def parse_timestamp(ts: str) -> datetime:
@@ -19,14 +23,17 @@ def parse_timestamp(ts: str) -> datetime:
         ts = ts.replace("Z", "+00:00")
     return datetime.fromisoformat(ts)
 
+
 def floor_hour(dt: datetime) -> str:
     return dt.replace(minute=0, second=0, microsecond=0).isoformat()
+
 
 def safe_json_loads(line: str) -> Optional[dict]:
     try:
         return json.loads(line)
     except Exception:
         return None
+
 
 def process_lines(lines, status_threshold=500):
     agg = defaultdict(lambda: {"total": 0, "errors": 0})
@@ -49,6 +56,7 @@ def process_lines(lines, status_threshold=500):
         if status >= status_threshold:
             agg[key]["errors"] += 1
     return dict(agg)
+
 
 # --- Main function ---
 def process_file_parallel(input_path: str, output_path: str, chunk_size=20000):
@@ -83,13 +91,15 @@ def process_file_parallel(input_path: str, output_path: str, chunk_size=20000):
         total = counts["total"]
         errors = counts["errors"]
         error_pct = (errors / total * 100.0) if total > 0 else 0.0
-        rows.append({
-            "hour": hour,
-            "endpoint": endpoint,
-            "total_requests": total,
-            "error_requests": errors,
-            "error_pct": round(error_pct, 2)
-        })
+        rows.append(
+            {
+                "hour": hour,
+                "endpoint": endpoint,
+                "total_requests": total,
+                "error_requests": errors,
+                "error_pct": round(error_pct, 2),
+            }
+        )
 
     df = pd.DataFrame(rows)
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -98,9 +108,11 @@ def process_file_parallel(input_path: str, output_path: str, chunk_size=20000):
     logger.info("✅ Parquet written: %s | Rows: %d", output_path, len(df))
     logger.info("⏱️ Total Time: %.2f seconds", time.time() - start)
 
+
 # --- Entry point ---
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Input .gz file")
     parser.add_argument("--output", required=True, help="Output .parquet file")

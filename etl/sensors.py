@@ -1,9 +1,10 @@
 # etl/sensors.py
+import logging
 import os
 import time
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 def file_ready(path: str, min_size_bytes: int = 1_000) -> bool:
     """
@@ -15,6 +16,7 @@ def file_ready(path: str, min_size_bytes: int = 1_000) -> bool:
     size = os.path.getsize(path)
     return size >= min_size_bytes
 
+
 def wait_for_file(path: str, min_size_bytes: int = 1_000, timeout: int = 60) -> bool:
     """
     Versión blocking/polling para uso standalone (no usada por el DAG).
@@ -23,7 +25,9 @@ def wait_for_file(path: str, min_size_bytes: int = 1_000, timeout: int = 60) -> 
     waited = 0
     while waited < timeout:
         if file_ready(path, min_size_bytes=min_size_bytes):
-            logger.info("✅ Archivo disponible: %s (%s bytes)", path, os.path.getsize(path))
+            logger.info(
+                "✅ Archivo disponible: %s (%s bytes)", path, os.path.getsize(path)
+            )
             return True
         logger.info("⏳ Esperando archivo... (%ss)", waited)
         time.sleep(5)

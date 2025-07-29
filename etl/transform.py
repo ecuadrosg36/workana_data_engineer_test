@@ -1,18 +1,20 @@
 import logging
-from pathlib import Path
-from typing import Optional, Union, List
-import pandas as pd
 import os
+from pathlib import Path
+from typing import List, Optional, Union
+
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 EXPECTED_COLS = ["order_id", "user_id", "amount", "ts", "status"]
 
+
 def transform_transactions(
     input_path: Union[str, Path],
     output_parquet: Optional[Union[str, Path]] = None,
-    chunksize: Optional[int] = None
+    chunksize: Optional[int] = None,
 ) -> pd.DataFrame:
     input_path = Path(input_path)
 
@@ -27,7 +29,9 @@ def transform_transactions(
         if chunksize:
             logger.info(f"📦 Lectura por chunks (chunksize={chunksize})")
             chunks: List[pd.DataFrame] = []
-            for raw_chunk in pd.read_csv(input_path, sep=",", chunksize=chunksize, engine="c"):
+            for raw_chunk in pd.read_csv(
+                input_path, sep=",", chunksize=chunksize, engine="c"
+            ):
                 chunk = _validate_and_clean(raw_chunk)
                 chunks.append(chunk)
             df = pd.concat(chunks, ignore_index=True)
@@ -37,7 +41,9 @@ def transform_transactions(
             df = _validate_and_clean(raw_df)
 
     except pd.errors.ParserError as e:
-        logger.error(f"❌ Error de parsing con engine='c'. Reintentando con engine='python'...")
+        logger.error(
+            f"❌ Error de parsing con engine='c'. Reintentando con engine='python'..."
+        )
         try:
             raw_df = pd.read_csv(input_path, sep=",", engine="python")
             df = _validate_and_clean(raw_df)
@@ -54,8 +60,13 @@ def transform_transactions(
         df.to_parquet(output_path, index=False)
         logger.info("✅ Parquet guardado en: %s", output_path)
 
-    logger.info("✅ Transformación completa. Filas: %s, Columnas: %s", len(df), df.columns.tolist())
+    logger.info(
+        "✅ Transformación completa. Filas: %s, Columnas: %s",
+        len(df),
+        df.columns.tolist(),
+    )
     return df
+
 
 def _validate_and_clean(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = [c.strip().lower() for c in df.columns]
@@ -64,7 +75,9 @@ def _validate_and_clean(df: pd.DataFrame) -> pd.DataFrame:
     missing = [c for c in EXPECTED_COLS if c not in df.columns]
     if missing:
         logger.error("❌ Faltan columnas: %s", missing)
-        raise ValueError(f"Columnas faltantes: {missing}. Encontradas: {df.columns.tolist()}")
+        raise ValueError(
+            f"Columnas faltantes: {missing}. Encontradas: {df.columns.tolist()}"
+        )
 
     df["ts"] = pd.to_datetime(df["ts"], errors="coerce")
     df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
@@ -72,6 +85,7 @@ def _validate_and_clean(df: pd.DataFrame) -> pd.DataFrame:
     df["status"] = df["status"].astype(str).str.upper()
 
     return df[EXPECTED_COLS]
+
 
 def _log_file_preview(path: Path, n_lines: int = 5) -> None:
     try:
