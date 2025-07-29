@@ -1,0 +1,60 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev, feature/*]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 black isort pytest mypy bandit coverage
+
+      # Linter: flake8
+      - name: Lint with flake8
+        run: flake8 etl/ --max-line-length=100
+
+      # Linter: black
+      - name: Check code format with black
+        run: black --check etl/
+
+      # Import sorter: isort
+      - name: Check imports with isort
+        run: isort --check-only etl/
+
+      # Static type check: mypy
+      - name: Type checking with mypy
+        run: mypy etl/
+
+      # Security checker: bandit
+      - name: Security check with bandit
+        run: bandit -r etl/
+
+      # Run tests with coverage
+      - name: Run pytest with coverage
+        run: |
+          coverage run -m pytest tests/
+          coverage report -m
+
+      # (Opcional) Validar DAGs Airflow
+      - name: Validate Airflow DAGs
+        run: |
+          if [ -d "airflow" ]; then
+            echo "Validating Airflow DAGs..."
+            python -c "import glob, ast; [ast.parse(open(f).read()) for f in glob.glob('airflow/*.py')]"
+          else
+            echo "No Airflow folder detected, skipping DAG validation."
+          fi
