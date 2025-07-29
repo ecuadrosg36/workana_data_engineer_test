@@ -5,7 +5,6 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-
 import polars as pl
 
 # Setup logging
@@ -13,7 +12,6 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger("etl.large_log_etl_polars")
-
 
 def parse_timestamp(ts: str) -> Optional[str]:
     try:
@@ -23,7 +21,6 @@ def parse_timestamp(ts: str) -> Optional[str]:
         return dt.replace(minute=0, second=0, microsecond=0).isoformat()
     except Exception:
         return None
-
 
 def process_gz_to_polars(
     input_gz_path: str, output_parquet_path: str, status_threshold: int = 500
@@ -71,13 +68,11 @@ def process_gz_to_polars(
         ])
     )
 
-
     Path(output_parquet_path).parent.mkdir(parents=True, exist_ok=True)
     grouped.write_parquet(output_parquet_path, compression="snappy")
 
     logger.info("✅ Parquet exportado: %s", output_parquet_path)
     logger.info("⏱️ Tiempo total: %.2f s", time.time() - start)
-
 
 if __name__ == "__main__":
     import argparse
