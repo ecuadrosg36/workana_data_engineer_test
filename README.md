@@ -736,5 +736,3 @@ Organizar todo el proyecto en un repositorio Git con estructura clara y reproduc
 - [ ] Integración con Notebooks o documentación automatizada (ej: MkDocs)
 - [ ] Reportes visuales o dashboards con métricas
 - [ ] Pipeline para publicar imagen Docker o paquete Python
-- [ ]
-- [ ]
