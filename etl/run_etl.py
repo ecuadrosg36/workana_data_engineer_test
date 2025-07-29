@@ -1,8 +1,7 @@
 import logging
 from pathlib import Path
 
-from etl.config import (CLEAN_OUTPUT_PATH, CSV_URL, MIN_SIZE_BYTES,
-                        RAW_CSV_PATH, TIMEOUT_SECONDS)
+from etl.config import CLEAN_OUTPUT_PATH, CSV_URL, MIN_SIZE_BYTES, RAW_CSV_PATH, TIMEOUT_SECONDS
 from etl.sensors import wait_for_file
 from etl.transform import transform_transactions
 from scripts.download_csv import download_csv
@@ -24,9 +23,7 @@ def main():
 
     # 2) Sensor de archivo
     logger.info("Esperando archivo...")
-    wait_for_file(
-        str(RAW_CSV_PATH), min_size_bytes=MIN_SIZE_BYTES, timeout=TIMEOUT_SECONDS
-    )
+    wait_for_file(str(RAW_CSV_PATH), min_size_bytes=MIN_SIZE_BYTES, timeout=TIMEOUT_SECONDS)
 
     # 3) Transformación
     logger.info("Transformando datos...")
