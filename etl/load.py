@@ -1,6 +1,6 @@
 import logging
-import sqlite3
 import re
+import sqlite3
 from typing import Literal, Optional
 
 import pandas as pd
