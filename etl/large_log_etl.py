@@ -133,7 +133,11 @@ def process_log_streaming(
 
 def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "snappy") -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(str(output_parquet), compression=compression, index=False)  # <- cast Path to str
+    df.to_parquet(
+        path=str(output_parquet),
+        compression=compression,
+        index=False,
+    )# <- cast Path to str
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
 
 
