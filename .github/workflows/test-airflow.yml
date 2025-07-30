@@ -1,0 +1,48 @@
+name: Run Airflow Tests in Docker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  airflow-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: airflow
+          POSTGRES_PASSWORD: airflow
+          POSTGRES_DB: airflow
+        options: >-
+          --health-cmd "pg_isready -U airflow" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose
+        run: docker-compose up -d
+
+      - name: Wait for Airflow to be ready
+        run: |
+          echo "Waiting for Airflow Webserver..."
+          until curl -s http://localhost:8080/health | grep -q '"status":"healthy"'; do
+            sleep 5
+            echo "Waiting..."
+          done
+          echo "Airflow is up!"
+
+      - name: Run tests inside webserver container
+        run: docker exec airflow-webserver pytest tests/
+
+      - name: Tear down
+        if: always()
+        run: docker-compose down -v
