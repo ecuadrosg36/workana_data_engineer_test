@@ -49,7 +49,8 @@ def process_lines(lines, status_threshold=500):
         try:
             status = int(status)
             hour = floor_hour(parse_timestamp(ts))
-        except Exception:
+        except Exception as e:
+            logger.debug(f"Error parsing record (ts={ts}, endpoint={endpoint}, status={status}): {e}")
             continue
         key = (hour, endpoint)
         agg[key]["total"] += 1
