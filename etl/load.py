@@ -39,7 +39,7 @@ def validate_table_not_empty(sqlite_path: str, table_name: str) -> int:
         raise ValueError(f"Invalid or unsafe table name: {table_name}")
     with sqlite3.connect(sqlite_path) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"SELECT COUNT(*) FROM {table_name}") #nosecB608
+        cursor.execute(f"SELECT COUNT(*) FROM {table_name}")  # nosec B608
         count = cursor.fetchone()[0]
     if count == 0:
         raise ValueError(f"La tabla '{table_name}' quedó vacía.")
