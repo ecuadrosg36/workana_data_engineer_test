@@ -16,7 +16,7 @@ import pandas as pd
 # Logging
 # ------------------------------------------------------
 def setup_logging(log_path: Optional[str] = None, level: int = logging.INFO) -> None:
-    from logging import Handler, FileHandler, StreamHandler
+    from logging import FileHandler, Handler, StreamHandler
 
     handlers: list[Handler] = [StreamHandler(sys.stdout)]
     if log_path:
