@@ -137,7 +137,7 @@ def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "sn
         path=str(output_parquet),
         compression=compression,
         index=False,
-    )# <- cast Path to str
+    )
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
 
 
