@@ -16,10 +16,13 @@ import pandas as pd
 # Logging
 # ------------------------------------------------------
 def setup_logging(log_path: Optional[str] = None, level: int = logging.INFO) -> None:
-    handlers = [logging.StreamHandler(sys.stdout)]
+    from logging import Handler, FileHandler, StreamHandler
+
+    handlers: list[Handler] = [StreamHandler(sys.stdout)]
     if log_path:
         Path(log_path).parent.mkdir(parents=True, exist_ok=True)
-        handlers.append(logging.FileHandler(log_path, encoding="utf-8"))
+        handlers.append(FileHandler(log_path, encoding="utf-8"))
+
     logging.basicConfig(
         level=level,
         format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
@@ -130,14 +133,14 @@ def process_log_streaming(
 
 def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "snappy") -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(output_parquet, compression=compression, index=False)
+    df.to_parquet(str(output_parquet), compression=compression, index=False)  # <- cast Path to str
     logger.info(f"Parquet escrito en: {output_parquet} | filas: {len(df):,}")
 
 
 # ------------------------------------------------------
 # CLI
 # ------------------------------------------------------
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="ETL streaming para sample.log.gz (JSONL).")
     parser.add_argument("--input", required=True, help="Ruta al archivo .log.gz")
     parser.add_argument("--output", required=True, help="Ruta al parquet de salida")
