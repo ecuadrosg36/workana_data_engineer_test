@@ -24,11 +24,13 @@ services:
       - postgres
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./tests:/opt/airflow/tests
       - ./:/opt/airflow/project
     ports:
       - 8080:8080
     command: >
       bash -c "
+        pip install pytest &&
         airflow db upgrade &&
         airflow users create --username admin --password admin --firstname Enman --lastname Cuadros --role Admin --email admin@example.com &&
         exec airflow webserver
@@ -50,6 +52,7 @@ services:
       PROJECT_ROOT: /opt/airflow/project
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./tests:/opt/airflow/tests
       - ./:/opt/airflow/project
     command: airflow scheduler
 
