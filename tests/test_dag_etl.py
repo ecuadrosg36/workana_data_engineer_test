@@ -1,3 +1,8 @@
+import os
+
+os.environ["AIRFLOW_HOME"] = "/tmp/airflow"
+os.makedirs("/tmp/airflow", exist_ok=True)
+
 from airflow.models import DagBag
 
 def test_dag_import():

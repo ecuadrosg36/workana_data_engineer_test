@@ -34,7 +34,7 @@ with DAG(
     dag_id="etl_transactions_dag",
     description="ETL local de transacciones (sensor + transform + load + métricas)",
     start_date=datetime(2024, 1, 1),
-    schedule=None,   # reemplaza schedule_interval (deprecated)
+    schedule=None,
     catchup=False,
     default_args=default_args,
     tags=["etl", "sqlite", "metrics"]
@@ -48,7 +48,7 @@ with DAG(
         op_kwargs={"min_size_bytes": 5_000},  # 5KB mínimo
         poke_interval=5,
         timeout=60,  # segundos
-        mode="poke",  # 'reschedule' si quieres liberar el worker entre pokes
+        mode="poke",
         doc_md="Sensor que espera a que el CSV exista y tenga un tamaño mínimo.",
     )
 

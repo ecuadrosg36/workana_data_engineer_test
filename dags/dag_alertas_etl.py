@@ -50,7 +50,7 @@ def detectar_usuarios_fallidos():
 with DAG(
     dag_id="alertas_etl",
     description="Simulación de alertas basadas en vistas SQL",
-    schedule_interval=None,
+    schedule=None,
     start_date=datetime(2024, 1, 1),
     catchup=False,
     default_args=default_args,

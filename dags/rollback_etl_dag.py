@@ -1,17 +1,17 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
-from airflow.utils.dates import days_ago
+from datetime import datetime, timedelta
 
 default_args = {
     "owner": "enman",
-    "start_date": days_ago(1),
+    "start_date": datetime.now() - timedelta(days=1),
     "retries": 1,
 }
 
 with DAG(
     dag_id="rollback_etl_dag",
     default_args=default_args,
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     description="Rollback de transacciones del último mes",
     tags=["rollback", "etl"],
