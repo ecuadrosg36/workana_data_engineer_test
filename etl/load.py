@@ -1,6 +1,6 @@
 import logging
 import sqlite3
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ def load_dataframe_to_sqlite(
     df: pd.DataFrame,
     sqlite_path: str,
     table_name: str,
-    if_exists: Literal['fail', 'replace', 'append'] = "append",
+    if_exists: Literal["fail", "replace", "append"] = "append",
     chunksize: int = 50000,
 ) -> None:
     logger.info("Conectando a SQLite: %s", sqlite_path)

@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import datetime
 from multiprocessing import get_context
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional, Tuple
 
 import pandas as pd
 
@@ -34,7 +34,9 @@ def safe_json_loads(line: str) -> Optional[dict]:
 
 
 def process_lines(lines, status_threshold=500):
-    agg = defaultdict(lambda: {"total": 0, "errors": 0})
+    agg: defaultdict[Tuple[str, str], Dict[str, int]] = defaultdict(
+        lambda: {"total": 0, "errors": 0}
+    )
     for line in lines:
         rec = safe_json_loads(line)
         if not rec:
@@ -78,7 +80,9 @@ def process_file_parallel(input_path: str, output_path: str, chunk_size=20000):
     with get_context("spawn").Pool(processes=4) as pool:
         results = pool.map(process_lines, chunks)
 
-    agg = defaultdict(lambda: {"total": 0, "errors": 0})
+    agg: defaultdict[Tuple[str, str], Dict[str, int]] = defaultdict(
+        lambda: {"total": 0, "errors": 0}
+    )
     for result in results:
         for key, val in result.items():
             agg[key]["total"] += val["total"]
