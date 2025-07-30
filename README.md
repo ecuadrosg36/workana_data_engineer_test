@@ -820,3 +820,8 @@ sqlite3 data/transactions.db < sql/rollback_last_month.sql
 - [ ] Integración con Notebooks o documentación automatizada (ej: MkDocs)
 - [ ] Reportes visuales o dashboards con métricas
 - [ ] Pipeline para publicar imagen Docker o paquete Python
+
+
+
+
+- [ ]
