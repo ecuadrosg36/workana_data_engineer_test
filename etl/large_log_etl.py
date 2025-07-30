@@ -135,6 +135,7 @@ def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "sn
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(
         path=output_parquet,
+        engine="auto",
         compression=compression,
         index=False,
     )
