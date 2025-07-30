@@ -7,7 +7,7 @@ import time
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Literal, Optional, Tuple
 
 import pandas as pd
 
@@ -131,7 +131,11 @@ def process_log_streaming(
     return df
 
 
-def write_parquet(df: pd.DataFrame, output_parquet: Path, compression: str = "snappy") -> None:
+def write_parquet(
+    df: pd.DataFrame,
+    output_parquet: Path,
+    compression: Literal["snappy", "gzip", "brotli", "lz4", "zstd"] = "snappy",
+) -> None:
     output_parquet.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(
         path=output_parquet,
