@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Wait for Airflow to be ready
         run: |
@@ -45,4 +45,7 @@ jobs:
 
       - name: Tear down
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
+
+      - name: Check Docker Compose version
+        run: docker compose version
